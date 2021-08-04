@@ -1,0 +1,68 @@
+---
+title: "Amazon"
+author: "Anna Abrahamyan"
+date: "11/22/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+
+options(scipen = 999)
+library(readxl)
+library(ggplot2)
+library(dplyr)
+library(knitr)
+library(reticulate)
+library(Hmisc)
+library(HistData)
+library(ggthemes)
+library(gridExtra)
+
+```
+```{r}
+setwd("C:/Users/Lenovo/Desktop")
+data <- read.csv("merged_df.csv")
+```
+
+```{r}
+ggplot(data, aes(x = Rating, y = Price, color = Brand)) +
+geom_point(alpha = 5, size = 2.5) + scale_color_manual('Brand',  values = c('Apple' = 'indianred2','Dell' = 'indianred4', 'HP' = 'plum', 'Lenovo' = 'tan2')) + labs(title = 'Relationship between Price and Rating of 4 brands of laptops', x = 'Rating', y = "Price $") + theme_light()
+```
+```{r}
+
+summarised <- drop_na(data) %>% group_by(Brand) %>%
+summarise(mean = mean(Price), sd = sd(Price))
+
+ggplot(summarised) +
+    geom_bar(aes(x = Brand, y = mean, fill = Brand), stat="identity") +
+     scale_fill_manual('Region', values = c('Apple' = 'indianred2','Dell' = 'indianred4', 'HP' = 'plum', 'Lenovo' = 'tan2')) +
+    geom_errorbar(aes(x= Brand, ymin= mean - sd, ymax=mean+ sd),width=0.5,
+                   colour="#333333", size=1) + theme(axis.text.x = element_text(angle = 15)) + geom_point(aes(x = Brand, y = mean),color = '#FFCC99', size =2) +
+ labs(title = "Mean of Price for Each Brand of Laptop",  y = "Mean of Price")
+```
+
+
+
+```{r}
+ggplot(data, aes(x = Rating, y = CustomerCount, color = Brand)) +
+geom_point(alpha = 3, size = 3) + scale_color_manual('Brand', values = c('Apple' = 'indianred2','Dell' = 'indianred4', 'HP' = 'plum', 'Lenovo' = 'tan2')) + labs(title = "Relationship between Rating and Customer Count of 4 brands of laptops", x = 'Rating', y = "Customer Count") + theme_light()
+```
+
+```{r}
+summarised_2 <- drop_na(data) %>% group_by(Brand) %>%
+summarise(mean = mean(Rating), sd = sd(Rating))
+
+ggplot(summarised_2) +
+    geom_bar(aes(x = Brand, y = mean, fill = Brand), stat="identity") +
+     scale_fill_manual('Region', values = c('Apple' = 'indianred2','Dell' = 'indianred4', 'HP' = 'plum', 'Lenovo' = 'tan2')) +
+    geom_errorbar(aes(x= Brand, ymin= mean - sd, ymax=mean+ sd),width=0.5,
+                   colour="#333333", size=1) + theme(axis.text.x = element_text(angle = 15)) + geom_point(aes(x = Brand, y = mean),color = '#FFCC99', size =2) +
+ labs(title = "Mean of Rating for Each Brand of Laptop",  y = "Mean of Rating")
+```
+
+```
+
